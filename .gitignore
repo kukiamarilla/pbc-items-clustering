@@ -2,3 +2,4 @@ venv
 .env
 /data
 .dvc/config
+**/*/__pycache__
