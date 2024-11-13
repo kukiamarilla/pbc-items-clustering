@@ -11,19 +11,21 @@ from item_interface import Tender
 def extract_items(directory, output_file, params):
 	files = load_pdfs(directory)
 	tenders = []
-	for i in range(1):
-		file = files[i]
-		print("Processing file: ", file)
-		category = file.split("/")[-2].split(") ")[1]
-		tender_id = file.split("/")[-1].split(".")[0]
-		text = extract_text_from_pdf(file)
-		items = extract_items_from_pbc(text, params['prompt'])
-		tender = tender_to_json(items)
-		tenders.append({
-			"tender_id": tender_id,
-			"category": category,
-			"items": tender
-		})	
+	for file in files:
+		try:
+			print("Processing file: ", file)
+			category = file.split("/")[-2].split(") ")[1]
+			tender_id = file.split("/")[-1].split(".")[0]
+			text = extract_text_from_pdf(file)
+			items = extract_items_from_pbc(text, params['prompt'])
+			tender = tender_to_json(items)
+			tenders.append({
+				"tender_id": tender_id,
+				"category": category,
+				"items": tender
+			})	
+		except Exception as e:
+			print(f"Error al procesar el archivo {file}, omitiendo.")
 	df = pd.DataFrame.from_dict(tenders)
 	df.to_csv(output_file, index=False)
 
