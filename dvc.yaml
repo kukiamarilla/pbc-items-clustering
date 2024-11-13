@@ -3,6 +3,7 @@ stages:
     cmd: python src/extract.py data/PBCs extracted/tender.csv
     deps:
       - data/PBCs
+      - src/extract.py
     outs:
       - extracted/tender.csv
     params:

@@ -20,8 +20,8 @@ def extract_items(directory, output_file, params):
 		items = extract_items_from_pbc(text, params['prompt'])
 		tender = tender_to_json(items)
 		tenders.append({
-			"category": category,
 			"tender_id": tender_id,
+			"category": category,
 			"items": tender
 		})	
 	df = pd.DataFrame.from_dict(tenders)
@@ -86,7 +86,7 @@ def extract_items_from_pbc(full_text, prompt):
   """
 	if full_text:
 		prompt = f"""
-		{prompt}:
+		{prompt}
 
 		{full_text}
 
