@@ -1,0 +1,19 @@
+schema: '2.0'
+stages:
+  extract_item:
+    cmd: python src/extract.py data/PBCs extracted/tender.csv
+    deps:
+    - path: data/PBCs
+      hash: md5
+      md5: a5a3fab38cb69b957ac5af643a1fc95c.dir
+      size: 423832794
+      nfiles: 655
+    params:
+      params.yaml:
+        prompt: 'Extrae los items de la siguiente licitación, presentada en formato
+          PDF:'
+    outs:
+    - path: extracted/tender.csv
+      hash: md5
+      md5: 4d7baab3a10849f29e93cdc68596b248
+      size: 2393

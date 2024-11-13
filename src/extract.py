@@ -2,21 +2,22 @@ import os
 import sys
 import PyPDF2
 import json
+import yaml
+import pandas as pd
 from openai import OpenAI
 from dotenv import load_dotenv
 from item_interface import Tender
-import pandas as pd
 
-def extract_items(directory, output_file):
+def extract_items(directory, output_file, params):
 	files = load_pdfs(directory)
 	tenders = []
-	for i in range(5):
+	for i in range(1):
 		file = files[i]
 		print("Processing file: ", file)
 		category = file.split("/")[-2].split(") ")[1]
 		tender_id = file.split("/")[-1].split(".")[0]
 		text = extract_text_from_pdf(file)
-		items = extract_items_from_pbc(text)
+		items = extract_items_from_pbc(text, params['prompt'])
 		tender = tender_to_json(items)
 		tenders.append({
 			"category": category,
@@ -73,7 +74,7 @@ def extract_text_from_pdf(pdf_file):
 		print("No se encontraron archivos PDF en el directorio.")
 	return None
 
-def extract_items_from_pbc(full_text):
+def extract_items_from_pbc(full_text, prompt):
 	"""
   Extrae los ítems de una licitación de un PDF utilizando GPT-4 y el modelo Tender.
 
@@ -85,7 +86,7 @@ def extract_items_from_pbc(full_text):
   """
 	if full_text:
 		prompt = f"""
-		Extrae los items de la siguiente licitación, presentada en formato PDF:
+		{prompt}:
 
 		{full_text}
 
@@ -148,6 +149,8 @@ def tender_to_json(tender):
 	
 if __name__ == "__main__":
 	load_dotenv()
+	with open("params.yaml") as file:
+		params = yaml.safe_load(file)
 	directory = sys.argv[1]
 	output_file = sys.argv[2]
-	extract_items(directory, output_file)
+	extract_items(directory, output_file, params)

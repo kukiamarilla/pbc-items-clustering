@@ -1,0 +1,9 @@
+stages:
+  extract_item:
+    cmd: python src/extract.py data/PBCs extracted/tender.csv
+    deps:
+      - data/PBCs
+    outs:
+      - extracted/tender.csv
+    params:
+      - prompt
