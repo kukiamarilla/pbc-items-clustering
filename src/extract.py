@@ -1,17 +1,30 @@
 import os
 import sys
 import PyPDF2
+import json
 from openai import OpenAI
 from dotenv import load_dotenv
 from item_interface import Tender
-import json
+import pandas as pd
 
-def extract_items(directory):
+def extract_items(directory, output_file):
 	files = load_pdfs(directory)
-	print(files[0])
-	text = extract_text_from_pdf(files[0])
-	items = extract_items_from_pbc(text)
-	print(tender_to_json(items))
+	tenders = []
+	for i in range(5):
+		file = files[i]
+		print("Processing file: ", file)
+		category = file.split("/")[-2].split(") ")[1]
+		tender_id = file.split("/")[-1].split(".")[0]
+		text = extract_text_from_pdf(file)
+		items = extract_items_from_pbc(text)
+		tender = tender_to_json(items)
+		tenders.append({
+			"category": category,
+			"tender_id": tender_id,
+			"items": tender
+		})	
+	df = pd.DataFrame.from_dict(tenders)
+	df.to_csv(output_file, index=False)
 
 def load_pdfs(directory_path):
   """
@@ -136,4 +149,5 @@ def tender_to_json(tender):
 if __name__ == "__main__":
 	load_dotenv()
 	directory = sys.argv[1]
-	extract_items(directory)
+	output_file = sys.argv[2]
+	extract_items(directory, output_file)
