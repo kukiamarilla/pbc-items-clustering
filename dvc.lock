@@ -21,3 +21,46 @@ stages:
       hash: md5
       md5: 6a4741ffe937e0aa51fa4c9808046e0b
       size: 2125149
+  calculate_elbow:
+    cmd: python src/calculate_elbow.py extracted/tender.csv graphs/elbow.png
+    deps:
+    - path: extracted/tender.csv
+      hash: md5
+      md5: 6a4741ffe937e0aa51fa4c9808046e0b
+      size: 2125149
+    - path: src/calculate_elbow.py
+      hash: md5
+      md5: d7689f30f87720e1602bab8b59ba41cf
+      size: 1971
+    params:
+      params.yaml:
+        elbow_max_clusters: 30
+    outs:
+    - path: graphs/elbow.png
+      hash: md5
+      md5: a925b3ed8c11ceafc5d919175012f16c
+      size: 32418
+  clustering:
+    cmd: python src/clustering.py extracted/tender.csv clustered/clustered_items.csv
+      models/kmeans.pkl
+    deps:
+    - path: extracted/tender.csv
+      hash: md5
+      md5: 6a4741ffe937e0aa51fa4c9808046e0b
+      size: 2125149
+    - path: src/clustering.py
+      hash: md5
+      md5: 38e348f216eed30592128bb63bf79189
+      size: 2038
+    params:
+      params.yaml:
+        n_clusters: 25
+    outs:
+    - path: clustered/clustered_items.csv
+      hash: md5
+      md5: ab525c106f27c69a9bc023452eb5e568
+      size: 764234
+    - path: models/kmeans.pkl
+      hash: md5
+      md5: 461e313b6beda8b55284aeaa4071b637
+      size: 129667

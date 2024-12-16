@@ -1,1 +1,3 @@
 prompt: "Extrae los items de la siguiente licitación, presentada en formato PDF:"
+elbow_max_clusters: 30
+n_clusters: 25

@@ -8,3 +8,24 @@ stages:
       - extracted/tender.csv
     params:
       - prompt
+
+  calculate_elbow:
+    cmd: python src/calculate_elbow.py extracted/tender.csv graphs/elbow.png
+    deps:
+      - extracted/tender.csv
+      - src/calculate_elbow.py
+    outs:
+      - graphs/elbow.png
+    params:
+      - elbow_max_clusters
+
+  clustering:
+    cmd: python src/clustering.py extracted/tender.csv clustered/clustered_items.csv models/kmeans.pkl
+    deps:
+      - extracted/tender.csv
+      - src/clustering.py
+    outs:
+      - clustered/clustered_items.csv
+      - models/kmeans.pkl
+    params:
+      - n_clusters
